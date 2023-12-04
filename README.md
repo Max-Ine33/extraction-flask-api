@@ -16,7 +16,11 @@ Here are the steps to install the project:
     
 ## Documentation
 
+Here is how to run the API:
 
+```bash
+  python flask_app.py
+```
 
 
 ## Running Tests

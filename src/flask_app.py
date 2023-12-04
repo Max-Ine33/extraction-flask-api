@@ -7,7 +7,7 @@ app = Flask(__name__)
 def home():
     return 'Homepage lol'
 
-@app.route('/articles', methods=['GET'])
+@app.route('/articles/', methods=['GET'])
 def get_articles():
     '''Get all articles of arXiv. Can search articles by keyword with --> articles?search=keyword'''
     search = request.args.get('search')
@@ -18,13 +18,15 @@ def get_articles():
 
 @app.route('/articles/<path:id>', methods=['GET']) # Used <path:> because there is a / in the id of an article
 def get_articles_by_id(id):
-    '''Get metadata on an article using its id'''
+    '''Get metadata on an article using its id --> /articles/id-example'''
     metadata = arxiv_crawler.fetch_metadata_by_id(id)
     return metadata
 
-@app.route('/text', methods=['GET'])
-def get_summary():
-    return 'still building that'
+@app.route('/text/<path:id>', methods=['GET'])
+def get_summary(id):
+    '''Get summary of an article using its id --> /text/id-example'''
+    summary = arxiv_crawler.fetch_summary_by_id(id)
+    return summary
 
 if __name__ == '__main__':
     app.run(debug=True) #Reload app when changes are made

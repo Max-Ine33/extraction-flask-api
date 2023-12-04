@@ -12,7 +12,7 @@ def fetch_arxiv_data(query):
     return entries
 
 def fetch_metadata_by_id(article_id):
-    ''' Fetch metadata about an article by using its id. Ex: cond-mat/0102536v1'''
+    ''' Fetch metadata about an article using its id. Ex: cond-mat/0102536v1'''
     url_id = arxiv_api_feed_url + '?id_list=' + article_id
     # print(url_id)
     data = requests.get(url_id)
@@ -20,3 +20,11 @@ def fetch_metadata_by_id(article_id):
     # print(data.text)
     return my_feed
     #print(len(my_feed['entries']))
+
+def fetch_summary_by_id(article_id):
+    ''' Fetch summary of an article using its id. Ex: cond-mat/0102536v1'''
+    url_id = arxiv_api_feed_url + '?id_list=' + article_id
+    data = requests.get(url_id)
+    my_feed = feedparser.parse(data.text)
+    return my_feed["entries"][0]["summary"]
+

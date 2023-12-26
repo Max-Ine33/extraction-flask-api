@@ -29,3 +29,11 @@ def get_arxiv_articles(query='all', start=0, max_results=10):
     feed = feedparser.parse(response.text)
     entries = feed.entries
     return entries
+
+def fetch_summary_by_id(article_id):
+    ''' Fetch summary of an article using its id. Ex: cond-mat/0102536v1'''
+    url_id = arxiv_api_feed_url + '?id_list=' + article_id
+    data = requests.get(url_id)
+    my_feed = feedparser.parse(data.text)
+    return my_feed["entries"][0]["summary"]
+

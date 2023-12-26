@@ -7,14 +7,23 @@ app = Flask(__name__)
 def home():
     return 'Homepage lol'
 
+
 @app.route('/articles', methods=['GET'])
 def get_articles():
     '''Get all articles of arXiv. Can search articles by keyword with --> articles?search=keyword'''
+    page = int(request.args.get('page', 1))
+    per_page = 10
+    start = (page - 1) * per_page
+    max_results = per_page
     search = request.args.get('search')
-    if search is None: # For now, not printing all the articles, need to specify keyword
-        return jsonify({'error': 'Search keyword "search" is required'}), 400
-    articles = arxiv_crawler.fetch_arxiv_data(search)
-    return jsonify({'articles': articles})
+
+    articles = arxiv_crawler.get_arxiv_articles(query=search, start=start, max_results=max_results)
+
+    if articles is not None:
+        return jsonify({'articles': articles})
+    else:
+        return jsonify({'error': 'Failed to fetch articles from arXiv'}), 500
+
 
 @app.route('/articles/<path:id>', methods=['GET']) # Used <path:> because there is a / in the id of an article
 def get_articles_by_id(id):
@@ -25,6 +34,7 @@ def get_articles_by_id(id):
 @app.route('/text', methods=['GET'])
 def get_summary():
     return 'still building that'
+
 
 if __name__ == '__main__':
     app.run(debug=True) #Reload app when changes are made

@@ -31,9 +31,12 @@ def get_articles_by_id(id):
     metadata = arxiv_crawler.fetch_metadata_by_id(id)
     return metadata
 
-@app.route('/text', methods=['GET'])
-def get_summary():
-    return 'still building that'
+@app.route('/text/<path:id>', methods=['GET'])
+def get_summary(id):
+    '''Get summary of an article using its id --> /text/id-example'''
+    summary = arxiv_crawler.fetch_summary_by_id(id)
+    return summary
+
 
 if __name__ == '__main__':
     app.run(debug=True) #Reload app when changes are made

@@ -4,7 +4,7 @@ import feedparser
 arxiv_api_feed_url = "http://export.arxiv.org/api/query" # URL for the ArXiv API
 
 def fetch_metadata_by_id(article_id):
-    ''' Fetch metadata about an article by using its id. Ex: cond-mat/0102536v1'''
+    ''' Fetch metadata about an article using its id. Ex: cond-mat/0102536v1'''
     url_id = arxiv_api_feed_url + '?id_list=' + article_id
     # print(url_id)
     data = requests.get(url_id)

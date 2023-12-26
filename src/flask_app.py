@@ -27,14 +27,13 @@ def get_articles():
 
 @app.route('/articles/<path:id>', methods=['GET']) # Used <path:> because there is a / in the id of an article
 def get_articles_by_id(id):
-    '''Get metadata on an article using its id'''
+    '''Get metadata on an article using its id --> /articles/id-example'''
     metadata = arxiv_crawler.fetch_metadata_by_id(id)
     return metadata
 
 @app.route('/text', methods=['GET'])
 def get_summary():
     return 'still building that'
-
 
 if __name__ == '__main__':
     app.run(debug=True) #Reload app when changes are made

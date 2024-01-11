@@ -120,14 +120,54 @@ with app.app_context():
             summary = fetch_summary_by_id(article_id)
             return summary
         
-        # Define a new route to fetch and populate articles from arXiv API
         @app.route("/populate_articles", methods=["POST"])
         def populate_articles():
             """Fetch articles from arXiv API and add them to the database."""
             data = request.get_json()
 
+            article_id = data.get("article_id")
             query = data.get("query", "all")
             max_results = data.get("max_results", 10)
+
+            if article_id:
+                # Populate a single article by ID
+                return populate_single_article(article_id)
+            else:
+                # Populate articles based on query and max_results
+                return populate_articles_by_query(query, max_results)
+
+        def populate_single_article(article_id):
+            existing_article = Article.query.get(article_id)
+
+            if existing_article is None:
+                # Fetch article details from arXiv API
+                url_id = arxiv_api_feed_url + "?id_list=" + article_id
+                data = requests.get(url_id)
+                my_feed = feedparser.parse(data.text)
+
+                if "entries" in my_feed and my_feed["entries"]:
+                    entry = my_feed["entries"][0]
+
+                    new_article = Article(
+                        id=article_id,
+                        title=entry.get("title", ""),
+                        summary=entry.get("summary", ""),
+                        published_date=entry.get("published", "")
+                    )
+
+                    # Add the new article to the database
+                    db.session.add(new_article)
+                    db.session.commit()
+
+                    return jsonify({"message": "Article added to the database successfully"})
+                else:
+                    return jsonify({"error": "Article not found in arXiv"}), 404
+            else:
+                return jsonify({"error": "Article already exists in the database"}), 400
+
+        def populate_articles_by_query(query, max_results):
+            # Implement logic to populate articles based on query and max_results
+            # You can use your existing logic from the get_arxiv_articles function
 
             articles = get_arxiv_articles(query=query, max_results=max_results)
 
@@ -146,7 +186,7 @@ with app.app_context():
 
             db.session.commit()
 
-            return jsonify({"message": "Articles added to the database successfully"})        
+            return jsonify({"message": "Articles added to the database successfully"})  
         
 
 if __name__ == "__main__":

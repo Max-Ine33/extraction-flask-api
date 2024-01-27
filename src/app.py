@@ -104,7 +104,6 @@ with app.app_context():
                 for author_entry in entry.get("authors", []):
                     author = Author(
                         name=author_entry.get("name", ""),
-                        affiliation=author_entry.get("affiliation", ""),
                         article=new_article
                     )
                     db.session.add(author)

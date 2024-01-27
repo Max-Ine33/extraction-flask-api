@@ -1,0 +1,18 @@
+{   
+    "authors": [
+      {
+        "name": "Minghao Miao"
+      },
+      {
+        "name": "Linsheng Wang"
+      }
+    ],
+    "comment": "28 pages, comments are very welcome!",
+    "doi": "",
+    "id": "2401.13999v1",
+    "journal_reference": "",
+    "published_date": "2024-01-25T07:57:41Z",
+    "summary": "We explicitly determine the optimal degenerations of Fano threefolds $X$ in\nfamily No 2.23 of Mori-Mukai's list as predicted by the Hamilton-Tian\nconjecture. More precisely, we find a special degeneration $(\\mathcal{X},\n\\xi_0)$ of $X$ such that $(\\mathcal{X}_0, \\xi_0)$ is weighted K-polystable,\nwhich is equivalent to $(\\mathcal{X}_0, \\xi_0)$ admitting a K\\\"ahler-Ricci\nsoliton (KRS) by \\cite{HL23} and \\cite{BLXZ23}. Furthermore, we study the\nmoduli spaces of $(\\mathcal{X}_0, \\xi_0)$. The $\\mathbf{H}$-invariant of $X$\ndivides the natural parameter space into two strata, which leads to different\nmoduli spaces of KRS Fano varieties. We show that one of them is isomorphic to\nthe GIT-moduli space of biconic curves $C\\subseteq \\mathbb{P}^1\\times\n\\mathbb{P}^1$, and the other one is a single point.",
+    "title": "Optimal Degenerations of K-unstable Fano threefolds",
+    "updated_date": "2024-01-25T07:57:41Z"
+  }

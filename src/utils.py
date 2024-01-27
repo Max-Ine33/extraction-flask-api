@@ -18,7 +18,7 @@ def article_to_dict(article):
         "comment": article.comment,
         "journal_reference": article.journal_reference,
         "authors": [
-            {"name": author.name, "affiliation": author.affiliation}
+            {"name": author.name}
             for author in article.authors
         ],
         # Add other fields as needed
@@ -58,7 +58,7 @@ def get_arxiv_articles(query="all", start=0, max_results=10):
         comment = entry.get("arxiv_comment", "")
         journal_reference = entry.get("arxiv_journal_ref", "")
 
-        # Extract authors and affiliations
+        # Extract authors
         authors = []
         for author_entry in entry.get("authors", []):
             author_name = author_entry.get("name", "")
@@ -122,7 +122,6 @@ def populate_single_article(article_id):
             for author_entry in entry.get("authors", []):
                 author = Author(
                     name=author_entry.get("name", ""),
-                    affiliation=author_entry.get("arxiv_affiliation", ""),
                     article=new_article
                 )
                 db.session.add(author)
@@ -162,7 +161,6 @@ def populate_articles_by_query(query, max_results):
             for author_entry in entry.get("authors", []):
                 author = Author(
                     name=author_entry.get("name", ""),
-                    affiliation=author_entry.get("affiliation", ""),
                     article=new_article
                 )
                 db.session.add(author)

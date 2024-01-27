@@ -22,5 +22,4 @@ class Article(db.Model):
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
-    affiliation = db.Column(db.String(255))
     article_id = db.Column(db.String(255), db.ForeignKey('article.id'), nullable=False)

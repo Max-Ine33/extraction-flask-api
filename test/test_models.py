@@ -50,7 +50,6 @@ class ModelsTestCase(unittest.TestCase):
             )
             author = Author(
                 name="Test Author",
-                affiliation="Test Affiliation",
                 article=article
             )
             db.session.add(article)

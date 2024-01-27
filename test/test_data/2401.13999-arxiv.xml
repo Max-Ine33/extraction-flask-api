@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <link href="http://arxiv.org/api/query?search_query%3D2401.13999%26id_list%3D%26start%3D0%26max_results%3D10" rel="self" type="application/atom+xml"/>
+  <title type="html">ArXiv Query: search_query=2401.13999&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <id>http://arxiv.org/api/8llAieoROJGUm/ZlslMhKp5zaBc</id>
+  <updated>2024-01-27T00:00:00-05:00</updated>
+  <opensearch:totalResults xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">1</opensearch:totalResults>
+  <opensearch:startIndex xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">0</opensearch:startIndex>
+  <opensearch:itemsPerPage xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">10</opensearch:itemsPerPage>
+  <entry>
+    <id>http://arxiv.org/abs/2401.13999v1</id>
+    <updated>2024-01-25T07:57:41Z</updated>
+    <published>2024-01-25T07:57:41Z</published>
+    <title>Optimal Degenerations of K-unstable Fano threefolds</title>
+    <summary>  We explicitly determine the optimal degenerations of Fano threefolds $X$ in
+family No 2.23 of Mori-Mukai's list as predicted by the Hamilton-Tian
+conjecture. More precisely, we find a special degeneration $(\mathcal{X},
+\xi_0)$ of $X$ such that $(\mathcal{X}_0, \xi_0)$ is weighted K-polystable,
+which is equivalent to $(\mathcal{X}_0, \xi_0)$ admitting a K\"ahler-Ricci
+soliton (KRS) by \cite{HL23} and \cite{BLXZ23}. Furthermore, we study the
+moduli spaces of $(\mathcal{X}_0, \xi_0)$. The $\mathbf{H}$-invariant of $X$
+divides the natural parameter space into two strata, which leads to different
+moduli spaces of KRS Fano varieties. We show that one of them is isomorphic to
+the GIT-moduli space of biconic curves $C\subseteq \mathbb{P}^1\times
+\mathbb{P}^1$, and the other one is a single point.
+</summary>
+    <author>
+      <name>Minghao Miao</name>
+    </author>
+    <author>
+      <name>Linsheng Wang</name>
+    </author>
+    <arxiv:comment xmlns:arxiv="http://arxiv.org/schemas/atom">28 pages, comments are very welcome!</arxiv:comment>
+    <link href="http://arxiv.org/abs/2401.13999v1" rel="alternate" type="text/html"/>
+    <link title="pdf" href="http://arxiv.org/pdf/2401.13999v1" rel="related" type="application/pdf"/>
+    <arxiv:primary_category xmlns:arxiv="http://arxiv.org/schemas/atom" term="math.AG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.AG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.DG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="14J45, 32Q20, 14D20" scheme="http://arxiv.org/schemas/atom"/>
+  </entry>
+</feed>

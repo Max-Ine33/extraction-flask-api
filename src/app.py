@@ -1,5 +1,6 @@
 # app.py
 import os
+
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Article, Author
@@ -17,7 +18,7 @@ with app.app_context():
 
     @app.route("/")
     def home():
-        return "Homepage lol"
+        return "Homepage"
 
     @app.route("/articles", methods=["POST"])
     def upload_new_article():
@@ -77,7 +78,7 @@ with app.app_context():
     @app.route("/articles/<string:article_id>", methods=["GET"], strict_slashes=False)
     def get_article(article_id):
         """Describe the requested article, all metadata."""
-        article = Article.query.get(article_id)
+        article = db.session.query(Article).filter_by(id=article_id).one_or_none()
 
         if article:
             return jsonify({"article": article_to_dict(article)})
@@ -115,6 +116,7 @@ with app.app_context():
                 return jsonify({"article": article_to_dict(new_article)})
             else:
                 return jsonify({"error": "Article not found in arXiv"}), 404
+
 
 
     @app.route("/text/<string:article_id>", methods=["GET"], strict_slashes=False)

@@ -3,10 +3,10 @@ stages:
 
 test:
   stage: test
-  image: python:3.8
+  image: python:3.10
   script:
     - /usr/local/bin/python -m venv venv
     - source venv/bin/activate
-    - pip install Flask
+    - pip install --upgrade pip
     - pip install -r requirements.txt
     - /usr/local/bin/python -m unittest discover -s test -p 'test_*.py'

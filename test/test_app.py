@@ -34,9 +34,16 @@ class AppTestCase(unittest.TestCase):
 
     # Tests for each page
     def test_homepage(self):
-        response = self.app.get("/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode("utf-8"), "Homepage")
+            # Send a GET request to the home route
+            response = self.app.test_client().get("/")
+
+            # Check the HTTP status code
+            self.assertEqual(response.status_code, 200)
+
+            # Check if certain HTML elements or strings are present in the response
+            self.assertIn(b"<h1>Welcome to this API", response.data)
+            self.assertIn(b"<a href=\"/articles\">View Articles</a>", response.data)
+            self.assertIn(b"<a href=\"/about\">About this API</a>", response.data)
 
     def test_articles(self):
         response = self.app.get("/articles")

@@ -1,0 +1,62 @@
+<!-- templates/home.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            cursor: pointer;
+        }
+    </style>
+    <title>ArXiv API</title>
+</head>
+<body>
+    <h1>Welcome to this API that extracts metadata from ArXiv.org and stores them in a Flask application!</h1>
+    <ul>
+        <li><a href="/articles">View Articles</a></li>
+        <li><a href="/auto_populate">Populate the database</a></li>
+        <li><a href="#" onclick="confirmAndSubmit()">Delete all entries from the database</a></li>
+        <li><a href="/about">About this API</a></li>
+    </ul>
+
+    <!-- Script to confirm and submit the form when the link is clicked -->
+    <script>
+        function confirmAndSubmit() {
+            var confirmation = confirm("Are you sure you want to delete all entries from the database?");
+            if (confirmation) {
+                document.getElementById("confirmationInput").value = "yes";
+                document.getElementById("emptyDatabaseForm").submit();
+            }
+        }
+    </script>
+
+    <!-- Form for emptying the database -->
+    <form action="/empty_database" method="post" id="emptyDatabaseForm" style="display: none;">
+        <input type="hidden" name="confirmation" id="confirmationInput" value="">
+        <input type="submit" value="Delete all entries from the database">
+    </form>
+</body>
+</html>

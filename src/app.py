@@ -27,39 +27,7 @@ with app.app_context():
 
     @app.route("/")
     def home():
-        return """
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-                padding: 20px;
-            }
-            h1 {
-                color: #333;
-            }
-            p {
-                font-size: 16px;
-                color: #666;
-            }
-            ul {
-                list-style-type: none;
-                padding: 0;
-            }
-            li {
-                margin-bottom: 10px;
-            }
-            a {
-                text-decoration: none;
-                color: #007BFF;
-            }
-        </style>
-        <h1>Welcome to this API that extracts metadata from ArXiv.org and stores them in a Flask application!</h1>
-        <ul>
-            <li><a href="/articles">View Articles</a></li>
-            <li><a href="/search">Populate the database</a></li>
-            <li><a href="/about">About this API</a></li>
-        </ul>
-        """
+        return render_template("home.html")
 
     @app.route("/about")
     def about():
@@ -191,6 +159,40 @@ with app.app_context():
             return populate_single_article(article_id)
         else:
             return populate_articles_by_query(query, max_results)
+
+    @app.route("/auto_populate", methods=["GET"])
+    def populate_database():
+        # Call the populate_articles_by_query function with the desired parameters
+        result = populate_articles_by_query(query="all", max_results=1000)
+        return result
+
+
+from flask import render_template
+
+
+@app.route("/empty_database", methods=["GET", "POST"])
+def empty_database():
+    if request.method == "POST":
+        try:
+            # Check if the confirmation form was submitted
+            confirmation = request.form.get("confirmation", "").lower()
+            if confirmation == "yes":
+                # Delete all records from the Article and Author tables
+                db.session.query(Article).delete()
+                db.session.query(Author).delete()
+
+                # Commit the changes to the database
+                db.session.commit()
+
+                return jsonify({"message": "Database emptied successfully"})
+            else:
+                return jsonify({"message": "Action canceled by user"})
+        except Exception as e:
+            # Handle any exceptions that may occur during the deletion
+            return jsonify({"error": f"Error: {str(e)}"}), 500
+    else:
+        # Render the confirmation page
+        return render_template("confirmation.html")
 
 
 if __name__ == "__main__":

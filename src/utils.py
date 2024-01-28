@@ -29,8 +29,8 @@ def fetch_metadata_by_id(article_id):
     return my_feed
 
 
-def get_arxiv_articles(query="all", start=0, max_results=10):
-    """Get ArXiv articles based on the search query."""
+def get_arxiv_articles(query="all", start=0, max_results=10, start_date=None):
+    """Get ArXiv articles based on the search query and start date."""
     if not query or query.strip() == "":
         query = "all"
 
@@ -41,6 +41,9 @@ def get_arxiv_articles(query="all", start=0, max_results=10):
         "sortBy": "submittedDate",
         "sortOrder": "descending",
     }
+
+    if start_date:
+        params["start_date"] = start_date
 
     response = requests.get(ARXIV_API_FEED_URL, params=params)
     feed = feedparser.parse(response.text)
@@ -160,3 +163,7 @@ def populate_articles_by_query(query, max_results):
     db.session.commit()
 
     return jsonify({"message": "Articles added to the database successfully"})
+
+
+
+

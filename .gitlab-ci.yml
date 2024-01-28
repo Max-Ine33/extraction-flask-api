@@ -5,7 +5,7 @@ test:
   stage: test
   image: python:3.8
   script:
-    - python -m venv venv
+    - /usr/local/bin/python -m venv venv
     - source venv/bin/activate
-    - pip install -r requirements.txt  # Install your project dependencies
-    - python -m unittest discover -s test -p 'test_*.py'
+    - pip install -r requirements.txt
+    - /usr/local/bin/python -m unittest discover -s test -p 'test_*.py'

@@ -1,0 +1,13 @@
+stages:
+  - test
+
+before_script:
+  - python -m venv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt
+
+test:
+  stage: test
+  script:
+    - python -m unittest discover -s tests -p 'test_*.py
+    - flake8 src

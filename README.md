@@ -27,9 +27,9 @@ pip install -r requirements.txt
 ```
 ### Populating the database
 
-Get the last 3 months of articles:
+Populate with the most recent 1000 articles:
 ```bash
-
+  curl -X GET http://127.0.0.1:5000/auto_populate
 ```
   
 Using a keyword:
@@ -45,22 +45,22 @@ Using an article id:
 ### Displaying the articles in the database
 Get all the articles:  
 ```bash
-  http://127.0.0.1:5000/articles
+  curl -X GET http://127.0.0.1:5000/articles
 ```  
   
 Get an article by id (adds it to the database if not already in it):  
 ```bash
-  http://127.0.0.1:5000/articles/2401.10216v1
+  curl -X GET http://127.0.0.1:5000/articles/2401.10216v1
 ```  
   
 Sort by date:  
 ```bash
-/articles?start_date=2024-01-18&end_date=2024-01-18
+curl -X GET http://127.0.0.1:5000/articles?start_date=2024-01-18&end_date=2024-01-18
 ```
 
 ### Get an article summary
 ```bash
-  http://127.0.0.1:5000/text/2401.10216v1
+  curl -X GET http://127.0.0.1:5000/text/2401.10216v1
 ```
 ### Delete all entries in the database
 ```bash
@@ -72,9 +72,9 @@ curl -X POST http://127.0.0.1:5000/empty_database -H "Content-Type: application/
 To run tests, run the following command:
 
 ```bash
-  
-```
+  python -m unittest discover -s test -p 'test_*.py'
 
+```
 
 
 ## Authors

@@ -7,6 +7,7 @@ from flask import jsonify
 # ArXiv API URL
 ARXIV_API_FEED_URL = "http://export.arxiv.org/api/query"
 
+
 def article_to_dict(article):
     return {
         "id": article.id,
@@ -17,11 +18,7 @@ def article_to_dict(article):
         "doi": article.doi,
         "comment": article.comment,
         "journal_reference": article.journal_reference,
-        "authors": [
-            {"name": author.name}
-            for author in article.authors
-        ],
-        # Add other fields as needed
+        "authors": [{"name": author.name} for author in article.authors],
     }
 
 
@@ -30,6 +27,7 @@ def fetch_metadata_by_id(article_id):
     data = requests.get(url_id)
     my_feed = feedparser.parse(data.text)
     return my_feed
+
 
 def get_arxiv_articles(query="all", start=0, max_results=10):
     """Get ArXiv articles based on the search query."""
@@ -62,26 +60,23 @@ def get_arxiv_articles(query="all", start=0, max_results=10):
         authors = []
         for author_entry in entry.get("authors", []):
             author_name = author_entry.get("name", "")
-            authors.append({
-                "name": author_name
-            })
+            authors.append({"name": author_name})
 
-        articles.append({
-            "id": article_id,
-            "title": entry.get("title", ""),
-            "summary": summary,
-            "published_date": published_date,
-            "updated_date": updated_date,
-            "doi": doi,
-            "comment": comment,
-            "journal_reference": journal_reference,
-            "authors": authors,
-        })
+        articles.append(
+            {
+                "id": article_id,
+                "title": entry.get("title", ""),
+                "summary": summary,
+                "published_date": published_date,
+                "updated_date": updated_date,
+                "doi": doi,
+                "comment": comment,
+                "journal_reference": journal_reference,
+                "authors": authors,
+            }
+        )
 
     return articles
-
-
-
 
 
 def fetch_summary_by_id(article_id):
@@ -115,15 +110,12 @@ def populate_single_article(article_id):
                 updated_date=entry.get("updated", ""),
                 doi=entry.get("arxiv_doi", ""),
                 comment=entry.get("arxiv_comment", ""),
-                journal_reference=entry.get("arxiv_journal_ref", "")
+                journal_reference=entry.get("arxiv_journal_ref", ""),
             )
 
             # Add authors to the new article
             for author_entry in entry.get("authors", []):
-                author = Author(
-                    name=author_entry.get("name", ""),
-                    article=new_article
-                )
+                author = Author(name=author_entry.get("name", ""), article=new_article)
                 db.session.add(author)
 
             # Add the new article to the database
@@ -135,6 +127,7 @@ def populate_single_article(article_id):
             return jsonify({"error": "Article not found in arXiv"}), 404
     else:
         return jsonify({"error": "Article already exists in the database"}), 400
+
 
 def populate_articles_by_query(query, max_results):
     # Implement logic to populate articles based on query and max_results
@@ -154,15 +147,12 @@ def populate_articles_by_query(query, max_results):
                 updated_date=entry["updated_date"],
                 doi=entry["doi"],
                 comment=entry["comment"],
-                journal_reference=entry["journal_reference"]
+                journal_reference=entry["journal_reference"],
             )
 
             # Add authors to the new article
             for author_entry in entry.get("authors", []):
-                author = Author(
-                    name=author_entry.get("name", ""),
-                    article=new_article
-                )
+                author = Author(name=author_entry.get("name", ""), article=new_article)
                 db.session.add(author)
 
             db.session.add(new_article)
@@ -170,5 +160,3 @@ def populate_articles_by_query(query, max_results):
     db.session.commit()
 
     return jsonify({"message": "Articles added to the database successfully"})
-
-

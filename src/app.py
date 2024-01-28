@@ -1,14 +1,23 @@
 # app.py
 import os
-
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Article, Author
-from utils import article_to_dict, fetch_summary_by_id, populate_single_article, populate_articles_by_query, get_arxiv_articles
+from utils import (
+    article_to_dict,
+    fetch_summary_by_id,
+    populate_single_article,
+    populate_articles_by_query,
+    get_arxiv_articles,
+)
 from datetime import datetime
+import markdown2
+from flask import render_template_string
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(os.getcwd(), "data/arxiv_articles.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
+    os.getcwd(), "data/arxiv_articles.db"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
@@ -18,7 +27,55 @@ with app.app_context():
 
     @app.route("/")
     def home():
-        return "Homepage"
+        return """
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 20px;
+            }
+            h1 {
+                color: #333;
+            }
+            p {
+                font-size: 16px;
+                color: #666;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            li {
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: #007BFF;
+            }
+        </style>
+        <h1>Welcome to this API that extracts metadata from ArXiv.org and stores them in a Flask application!</h1>
+        <ul>
+            <li><a href="/articles">View Articles</a></li>
+            <li><a href="/search">Populate the database</a></li>
+            <li><a href="/about">About this API</a></li>
+        </ul>
+        """
+
+    @app.route("/about")
+    def about():
+        # Convert the README content to HTML
+        with open("README.md", "r", encoding="utf-8") as readme_file:
+            readme_content = readme_file.read()
+        readme_html = markdown2.markdown(readme_content)
+
+        # Render an HTML template with the README content
+        return render_template_string(
+            """
+            <h1>About</h1>
+            {{ readme_html|safe }}
+        """,
+            readme_html=readme_html,
+        )
 
     @app.route("/articles", methods=["POST"])
     def upload_new_article():
@@ -32,15 +89,13 @@ with app.app_context():
             updated_date=data.get("updated_date"),
             doi=data.get("doi"),
             comment=data.get("comment"),
-            journal_reference=data.get("journal_reference")
+            journal_reference=data.get("journal_reference"),
         )
 
         db.session.merge(new_article)
         db.session.commit()
 
         return jsonify({"document_id": new_article.id})
-
-
 
     @app.route("/articles", methods=["GET"], strict_slashes=False)
     def get_articles():
@@ -52,7 +107,9 @@ with app.app_context():
         subcategory = request.args.get("subcategory")
 
         # Parse start and end date strings to datetime objects if provided
-        start_date = datetime.strptime(start_date_str, "%Y-%m-%d") if start_date_str else None
+        start_date = (
+            datetime.strptime(start_date_str, "%Y-%m-%d") if start_date_str else None
+        )
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d") if end_date_str else None
 
         # Base query
@@ -69,11 +126,13 @@ with app.app_context():
             articles_query = articles_query.filter(Article.subcategory == subcategory)
 
         # Paginate the results
-        articles = articles_query.paginate(page=page, per_page=per_page, error_out=False)
+        articles = articles_query.paginate(
+            page=page, per_page=per_page, error_out=False
+        )
 
-        return jsonify({"articles": [article_to_dict(article) for article in articles.items]})
-
-
+        return jsonify(
+            {"articles": [article_to_dict(article) for article in articles.items]}
+        )
 
     @app.route("/articles/<string:article_id>", methods=["GET"], strict_slashes=False)
     def get_article(article_id):
@@ -97,14 +156,13 @@ with app.app_context():
                     updated_date=entry.get("updated_date", ""),
                     doi=entry.get("doi", ""),
                     comment=entry.get("comment", ""),
-                    journal_reference=entry.get("journal_reference", "")
+                    journal_reference=entry.get("journal_reference", ""),
                 )
 
                 # Add authors to the new article
                 for author_entry in entry.get("authors", []):
                     author = Author(
-                        name=author_entry.get("name", ""),
-                        article=new_article
+                        name=author_entry.get("name", ""), article=new_article
                     )
                     db.session.add(author)
 
@@ -115,8 +173,6 @@ with app.app_context():
                 return jsonify({"article": article_to_dict(new_article)})
             else:
                 return jsonify({"error": "Article not found in arXiv"}), 404
-
-
 
     @app.route("/text/<string:article_id>", methods=["GET"], strict_slashes=False)
     def get_summary(article_id):
@@ -135,6 +191,7 @@ with app.app_context():
             return populate_single_article(article_id)
         else:
             return populate_articles_by_query(query, max_results)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

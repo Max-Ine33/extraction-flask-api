@@ -1,16 +1,18 @@
 import unittest
 import os
 import sys
+
 # Add the root directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 from src.app import app, db
 from src.models import Article, Author
+
 
 class ModelsTestCase(unittest.TestCase):
 
     def setUp(self):
         # Set up a test database
-        app.config['TESTING'] = True
+        app.config["TESTING"] = True
         self.app = app.test_client()
 
         with app.app_context():
@@ -29,7 +31,7 @@ class ModelsTestCase(unittest.TestCase):
                 id="test_article",
                 title="Test Article",
                 summary="This is a test article.",
-                published_date="2024-01-27"
+                published_date="2024-01-27",
             )
             db.session.add(article)
             db.session.commit()
@@ -46,12 +48,9 @@ class ModelsTestCase(unittest.TestCase):
                 id="test_article",
                 title="Test Article",
                 summary="This is a test article.",
-                published_date="2024-01-27"
+                published_date="2024-01-27",
             )
-            author = Author(
-                name="Test Author",
-                article=article
-            )
+            author = Author(name="Test Author", article=article)
             db.session.add(article)
             db.session.add(author)
             db.session.commit()
@@ -62,5 +61,6 @@ class ModelsTestCase(unittest.TestCase):
             self.assertIsNotNone(retrieved_author)
             self.assertEqual(retrieved_author.name, "Test Author")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

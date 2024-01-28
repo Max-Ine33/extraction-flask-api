@@ -1,9 +1,10 @@
 # app.py
 import os
-from flask import Flask, jsonify, request
+import json
+from flask import Flask, jsonify, request, Response
 from flask_sqlalchemy import SQLAlchemy
-from models import db, Article, Author
-from utils import (
+from src.models import db, Article, Author
+from src.utils import (
     article_to_dict,
     fetch_summary_by_id,
     populate_single_article,
@@ -19,6 +20,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
     os.getcwd(), "data/arxiv_articles.db"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
+
 db.init_app(app)
 
 with app.app_context():
@@ -98,9 +101,16 @@ with app.app_context():
             page=page, per_page=per_page, error_out=False
         )
 
-        return jsonify(
-            {"articles": [article_to_dict(article) for article in articles.items]}
-        )
+        # Convert articles to dictionaries
+        articles_dict = {"articles": [article_to_dict(article) for article in articles.items]}
+
+        # Use json.dumps to serialize the data to a JSON-formatted string with indentation
+        json_data = json.dumps(articles_dict, indent=2)
+
+        # Create a Flask Response with the formatted JSON
+        response = Response(response=json_data, status=200, mimetype="application/json")
+
+        return response
 
     @app.route("/articles/<string:article_id>", methods=["GET"], strict_slashes=False)
     def get_article(article_id):
@@ -108,7 +118,16 @@ with app.app_context():
         article = db.session.query(Article).filter_by(id=article_id).one_or_none()
 
         if article:
-            return jsonify({"article": article_to_dict(article)})
+            # Convert the article to a dictionary
+            article_dict = {"article": article_to_dict(article)}
+
+            # Use json.dumps to serialize the data to a JSON-formatted string with indentation
+            json_data = json.dumps(article_dict, indent=2)
+
+            # Create a Flask Response with the formatted JSON
+            response = Response(response=json_data, status=200, mimetype="application/json")
+
+            return response
         else:
             # If article not found in the database, fetch it from arXiv API
             articles = get_arxiv_articles(query=article_id, max_results=1)
@@ -138,7 +157,16 @@ with app.app_context():
                 db.session.add(new_article)
                 db.session.commit()
 
-                return jsonify({"article": article_to_dict(new_article)})
+                # Convert the new article to a dictionary
+                new_article_dict = {"article": article_to_dict(new_article)}
+
+                # Use json.dumps to serialize the data to a JSON-formatted string with indentation
+                json_data = json.dumps(new_article_dict, indent=2)
+
+                # Create a Flask Response with the formatted JSON
+                response = Response(response=json_data, status=200, mimetype="application/json")
+
+                return response
             else:
                 return jsonify({"error": "Article not found in arXiv"}), 404
 

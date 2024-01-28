@@ -1,7 +1,7 @@
 # utils.py
 import feedparser
 import requests
-from models import db, Article, Author
+from src.models import db, Article, Author
 from flask import jsonify
 
 # ArXiv API URL

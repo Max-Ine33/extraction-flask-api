@@ -1,0 +1,11 @@
+We explicitly determine the optimal degenerations of Fano threefolds $X$ in
+family No 2.23 of Mori-Mukai's list as predicted by the Hamilton-Tian
+conjecture. More precisely, we find a special degeneration $(\mathcal{X},
+\xi_0)$ of $X$ such that $(\mathcal{X}_0, \xi_0)$ is weighted K-polystable,
+which is equivalent to $(\mathcal{X}_0, \xi_0)$ admitting a K\"ahler-Ricci
+soliton (KRS) by \cite{HL23} and \cite{BLXZ23}. Furthermore, we study the
+moduli spaces of $(\mathcal{X}_0, \xi_0)$. The $\mathbf{H}$-invariant of $X$
+divides the natural parameter space into two strata, which leads to different
+moduli spaces of KRS Fano varieties. We show that one of them is isomorphic to
+the GIT-moduli space of biconic curves $C\subseteq \mathbb{P}^1\times
+\mathbb{P}^1$, and the other one is a single point.

@@ -1,11 +1,14 @@
 import unittest
 import os
 import sys
+import json
+import sys
 
 # Add the root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
-from src.app import app, db
 from unittest.mock import patch, Mock
+from pathlib import Path
+from src.app import app, db
 from src.utils import (
     article_to_dict,
     get_arxiv_articles,
@@ -14,11 +17,20 @@ from src.utils import (
     populate_articles_by_query,
 )
 from src.models import Article, Author
-from pathlib import Path
-import json
 
 
 class UtilsTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # Mock the response from requests.get globally
+        cls.patcher = patch("src.utils.requests.get")
+        cls.mock_requests_get = cls.patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        # Stop patching requests.get
+        cls.patcher.stop()
 
     def setUp(self):
         # Set up a test client and configure the app for testing
@@ -64,7 +76,6 @@ class UtilsTestCase(unittest.TestCase):
             doi="doi:1234/test",
             comment="Test comment",
             journal_reference="Test Journal",
-            # You may need to add other fields as needed
         )
 
         # Add authors to the article
@@ -93,7 +104,7 @@ class UtilsTestCase(unittest.TestCase):
 
     @patch("src.utils.requests.get")
     def test_get_arxiv_articles(self, mock_requests_get):
-        # Mock the response from requests.get
+        # Test for get_arxiv_articles
         mock_response = Mock()
 
         # Read the mocked response from the file
@@ -120,6 +131,95 @@ class UtilsTestCase(unittest.TestCase):
             json.dumps(result[0], sort_keys=True),
             json.dumps(expected_output, sort_keys=True),
         )
+
+    def test_fetch_summary_by_id(self):
+        # Test for fetch_summary_by_id
+        article_id = "2401.13999"
+        mock_response = Mock()
+
+        # Read the mocked response from the file
+        file_path = (
+            Path(__file__).parent / "test_data" / "2401.13999-arxiv.xml"
+        ).resolve()
+        with open(file_path, "r") as file:
+            mock_response.text = file.read()
+
+        self.mock_requests_get.return_value = mock_response
+
+        # Call the function that fetches the summary
+        result = fetch_summary_by_id(article_id)
+
+        # Read the expected output from the file
+        expected_summary_path = (
+            Path(__file__).parent / "test_data" / "2401.13999-summary.txt"
+        ).resolve()
+        with open(expected_summary_path, "r") as expected_file:
+            expected_summary = expected_file.read()
+
+        # Modify the assertion to check for a substring
+        self.assertEqual(expected_summary, result)
+
+
+    def test_populate_single_article(self):
+        # Test for populate_single_article
+        article_id = "new_test_article"
+
+        # Read the content of the template response from the file
+        template_response_path = (
+            Path(__file__).parent / "test_data" / "2401.13999-arxiv.xml"
+        ).resolve()
+
+        with open(template_response_path, "r") as template_file:
+            template_response_content = template_file.read()
+
+        # Create a mock response with the template content
+        mock_response = Mock()
+        mock_response.text = template_response_content
+
+        # Set up the mock to return the mocked response when the arXiv API is called
+        with app.app_context(), patch("src.utils.requests.get", return_value=mock_response):
+            # Call the function that populates a single article
+            article_id = "2401.13999"
+            result = populate_single_article(article_id)
+
+            # Extract the Flask response object and status code
+            flask_response = result
+            status_code = flask_response.status_code
+
+            # Check if the status code indicates success (e.g., 200 OK)
+            self.assertEqual(status_code, 200)
+
+            # Extract the message from the JSON response
+            response_message = flask_response.get_json().get("message", "")
+
+            # Check if the message indicates success
+            self.assertIn("Article added to the database successfully", response_message)
+
+            # Check if the article is now in the database
+            response = self.app.get(f'/articles/{article_id}')
+            self.assertEqual(response.status_code, 200)  # Article in the database
+
+            # Try to populate the same article again
+            result_duplicate = populate_single_article(article_id)
+
+            # Check if the response indicates that the article already exists
+            self.assertEqual(result_duplicate[1], 400)
+
+
+    def test_populate_articles_by_query(self):
+        # Test for populate_articles_by_query
+        query = "test"
+        max_results = 5
+
+        with app.test_request_context():
+            # Call the function that populates articles by query
+            response = populate_articles_by_query(query, max_results)
+
+            # Check if the response indicates success
+            result = response.get_json()
+            self.assertIn("message", result)
+
+
 
 
 if __name__ == "__main__":

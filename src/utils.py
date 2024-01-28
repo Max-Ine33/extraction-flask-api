@@ -94,7 +94,7 @@ def fetch_summary_by_id(article_id):
 
 
 def populate_single_article(article_id):
-    existing_article = Article.query.get(article_id)
+    existing_article = db.session.get(Article, article_id)
 
     if existing_article is None:
         # Fetch article details from arXiv API
@@ -139,7 +139,7 @@ def populate_articles_by_query(query, max_results):
 
     for entry in articles:
         article_id = entry["id"]
-        existing_article = Article.query.get(article_id)
+        existing_article = db.session.get(Article, article_id)
 
         if existing_article is None:
             new_article = Article(

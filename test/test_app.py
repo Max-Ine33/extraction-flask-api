@@ -6,12 +6,6 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 from src.app import app, db
 from src.models import Article, Author
-from src.utils import (
-    get_arxiv_articles,
-    fetch_summary_by_id,
-    populate_single_article,
-    populate_articles_by_query,
-)
 
 
 class AppTestCase(unittest.TestCase):
@@ -34,23 +28,22 @@ class AppTestCase(unittest.TestCase):
 
     # Tests for each page
     def test_homepage(self):
-            # Send a GET request to the home route
-            response = self.app.get("/")
+        response = self.app.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"<h1>Welcome to this API", response.data)
+        self.assertIn(b"<a href=\"/articles\">View Articles</a>", response.data)
+        self.assertIn(b"<a href=\"/about\">About this API</a>", response.data)
 
-            # Check the HTTP status code
-            self.assertEqual(response.status_code, 200)
-
-            # Check if certain HTML elements or strings are present in the response
-            self.assertIn(b"<h1>Welcome to this API", response.data)
-            self.assertIn(b"<a href=\"/articles\">View Articles</a>", response.data)
-            self.assertIn(b"<a href=\"/about\">About this API</a>", response.data)
+    def test_about_page(self):
+        response = self.app.get("/about")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"<h1>About</h1>", response.data)
 
     def test_articles(self):
         response = self.app.get("/articles")
         self.assertEqual(response.status_code, 200)
 
     def test_upload_new_article(self):
-        # Test uploading a new article
         data = {
             "id": "test_article",
             "title": "Test Article",
@@ -63,7 +56,6 @@ class AppTestCase(unittest.TestCase):
         }
 
         with app.app_context():
-            # Create and commit the new article
             new_article = Article(
                 id=data["id"],
                 title=data["title"],
@@ -77,15 +69,28 @@ class AppTestCase(unittest.TestCase):
             db.session.add(new_article)
             db.session.commit()
 
-            # Fetch the uploaded article using Session.get()
             retrieved_article = db.session.get(Article, data["id"])
             self.assertIsNotNone(retrieved_article)
 
-        # Make a GET request to fetch the uploaded article
         response = self.app.get(f'/articles/{data["id"]}')
         self.assertEqual(response.status_code, 200)
         result = response.get_json()
         self.assertIn("article", result)
+
+    def test_auto_populate(self):
+        response = self.app.get("/auto_populate")
+        self.assertEqual(response.status_code, 200)
+        # Add assertions based on the expected behavior of the auto_populate route
+
+    def test_empty_database_post_confirmation_yes(self):
+        response = self.app.post("/empty_database", data={"confirmation": "yes"})
+        self.assertEqual(response.status_code, 200)
+        # Add assertions based on the expected behavior after confirming deletion
+
+    def test_empty_database_post_confirmation_no(self):
+        response = self.app.post("/empty_database", data={"confirmation": "no"})
+        self.assertEqual(response.status_code, 200)
+        # Add assertions based on the expected behavior after canceling deletion
 
 
 if __name__ == "__main__":

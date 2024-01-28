@@ -35,7 +35,7 @@ class AppTestCase(unittest.TestCase):
     # Tests for each page
     def test_homepage(self):
             # Send a GET request to the home route
-            response = self.app.test_client().get("/")
+            response = self.app.get("/")
 
             # Check the HTTP status code
             self.assertEqual(response.status_code, 200)

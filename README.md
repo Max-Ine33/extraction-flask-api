@@ -70,6 +70,20 @@ To ensure a clean and isolated environment for running the Fil Rouge Extraction 
     
 
 ## Documentation :books:
+### Structure of the API
+| HTTP Method | Endpoint                        | Description                                       | Request Parameters                                                   | Request Body                                      | Response Format                                | Notes                                     |
+|-------------|---------------------------------|---------------------------------------------------|-----------------------------------------------------------------------|---------------------------------------------------|-------------------------------------------------|--------------------------------------------|
+| GET         | /                              | Render the home page                              | N/A                                                                   | N/A                                               | HTML                                            |                                            |
+| GET         | /about                          | Render the 'About' page                           | N/A                                                                   | N/A                                               | HTML                                            |                                            |
+| POST        | /articles                       | Upload a new article to the database              | N/A                                                                   | JSON: `{ "id": "123", "title": "Article Title", "summary": "Article Summary", ... }` | JSON                                            |                                            |
+| GET         | /articles                       | Retrieve a list of articles based on filters      | `query` (optional), `page` (optional), `per_page` (optional), `start_date` (optional), `end_date` (optional), `subcategory` (optional) | N/A                                               | JSON                                            | Pagination supported.                       |
+| GET         | /articles/{article_id}          | Describe the requested article, all metadata      | `article_id` (path parameter)                                       | N/A                                               | JSON                                            | If article not in the database, fetch from arXiv API. |
+| GET         | /text/{article_id}               | Retrieve the summary of the specified article     | `article_id` (path parameter)                                       | N/A                                               | Plain Text                                      |                                            |
+| POST        | /populate_articles               | Populate the database with articles               | JSON: `{ "article_id": "123", "query": "all", "max_results": 10 }` | N/A                                               | JSON                                            |                                            |
+| GET         | /auto_populate                   | Populate the database with default parameters     | N/A                                                                   | N/A                                               | JSON                                            |                                            |
+| GET/POST    | /empty_database                  | Render confirmation page and handle empty database | Form data: `confirmation` (string, should be "yes" for deletion)     | N/A                                               | JSON                                            |                                            |
+| GET/POST    | /remove/{article_id}             | Delete the specified article from the database    | `article_id` (path parameter)                                       | N/A                                               | JSON                                            |                                            |
+
 
 ### Populating the database
 

@@ -56,6 +56,7 @@ To ensure a clean and isolated environment for running the Fil Rouge Extraction 
 4. With the virtual environment activated, install the project dependencies:
 
     ```bash
+    python -m pip install --upgrade pip
     pip install -r requirements.txt
     ```
   

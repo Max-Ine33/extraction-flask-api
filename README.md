@@ -18,7 +18,7 @@ To get started with the Fil Rouge Extraction API, follow these steps to clone th
   
 ### Checking Python :snake: Version
 
-Before running the Fil Rouge Extraction API, ensure that you have Python 3.10 installed on your system. You can check your Python version by opening a terminal or command prompt and executing the following command:
+Before running the Fil Rouge Extraction API, ensure that you have Python 3.10 installed on your system (Python 3.9 might be enough). You can check your Python version by opening a terminal or command prompt and executing the following command:
   
 ```bash
 python --version
@@ -67,8 +67,11 @@ To ensure a clean and isolated environment for running the Fil Rouge Extraction 
 ```bash
   gunicorn src.app:app -c gunicorn_config.py
 ```
-
-    
+  
+If you did not change the [gunicorn_config.py file](#changing-the-port), the API is now running on: [http://localhost:8080]
+  
+You can use the [basic UI](#using-the-ui) or make curl requests (some [examples](#populating-the-database) are in the documentation).
+  
 
 ## Documentation :books:
 ### Structure of the API

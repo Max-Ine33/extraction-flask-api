@@ -37,7 +37,7 @@ class ModelsTestCase(unittest.TestCase):
             db.session.commit()
 
         with app.app_context():
-            retrieved_article = db.session.get(Article, "test_article")
+            retrieved_article = db.session.query(Article).filter_by(id="test_article").first()
             self.assertIsNotNone(retrieved_article)
             self.assertEqual(retrieved_article.title, "Test Article")
 
@@ -56,8 +56,8 @@ class ModelsTestCase(unittest.TestCase):
             db.session.commit()
 
         with app.app_context():
-            # Use Session.get() instead of Query.get()
-            retrieved_author = db.session.get(Author, 1)
+            # Use Session.query() instead of Session.get() for querying Author
+            retrieved_author = db.session.query(Author).filter_by(id=1).first()
             self.assertIsNotNone(retrieved_author)
             self.assertEqual(retrieved_author.name, "Test Author")
 

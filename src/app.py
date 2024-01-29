@@ -30,10 +30,12 @@ with app.app_context():
 
     @app.route("/")
     def home():
+        """Render the home page."""
         return render_template("home.html")
 
     @app.route("/about")
     def about():
+        """Render the 'About' page."""
         # Convert the README content to HTML
         with open("README.md", "r", encoding="utf-8") as readme_file:
             readme_content = readme_file.read()
@@ -50,6 +52,7 @@ with app.app_context():
 
     @app.route("/articles", methods=["POST"])
     def upload_new_article():
+        """Upload a new article to the database."""
         data = request.get_json()
 
         new_article = Article(
@@ -70,6 +73,7 @@ with app.app_context():
 
     @app.route("/articles", methods=["GET"], strict_slashes=False)
     def get_articles():
+        """Retrieve a list of articles based on specified filters."""
         query = request.args.get("query", "all")
         page = int(request.args.get("page", 1))
         per_page = int(request.args.get("per_page", 10))
@@ -178,11 +182,13 @@ with app.app_context():
 
     @app.route("/text/<string:article_id>", methods=["GET"], strict_slashes=False)
     def get_summary(article_id):
+        """Retrieve the summary of the specified article."""
         summary = fetch_summary_by_id(article_id)
         return summary
 
     @app.route("/populate_articles", methods=["POST"], strict_slashes=False)
     def populate_articles():
+        """Populate the database with articles based on the provided criteria."""
         data = request.get_json()
 
         article_id = data.get("article_id")
@@ -196,6 +202,7 @@ with app.app_context():
 
     @app.route("/auto_populate", methods=["GET"])
     def populate_database():
+        """Populate the database with articles using default parameters."""
         # Call the populate_articles_by_query function with the desired parameters
         result = populate_articles_by_query(query="all", max_results=1000)
         return result
@@ -206,6 +213,7 @@ from flask import render_template
 
 @app.route("/empty_database", methods=["GET", "POST"])
 def empty_database():
+    """Render the confirmation page and handle the empty database action."""
     if request.method == "POST":
         try:
             # Check if the confirmation form was submitted
@@ -227,6 +235,23 @@ def empty_database():
     else:
         # Render the confirmation page
         return render_template("confirmation.html")
+
+@app.route("/remove/<string:article_id>", methods=["GET","POST"])
+def delete_article(article_id):
+    """Delete the specified article from the database."""
+    try:
+        # Delete the record from the Article table
+        article = db.session.query(Article).filter_by(id=article_id).first()
+        if article:
+            db.session.delete(article)
+            db.session.commit()
+            return jsonify({"message": f"Article {article_id} deleted successfully"})
+        else:
+            return jsonify({"message": f"Article {article_id} not found"}), 404
+    except Exception as e:
+        # Handle any exceptions that may occur during the deletion
+        return jsonify({"error": f"Error: {str(e)}"}), 500
+
 
 
 if __name__ == "__main__":

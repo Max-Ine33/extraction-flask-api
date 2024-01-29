@@ -9,6 +9,7 @@ ARXIV_API_FEED_URL = "http://export.arxiv.org/api/query"
 
 
 def article_to_dict(article):
+    """Converts an Article object to a dictionary."""
     return {
         "id": article.id,
         "title": article.title,
@@ -23,13 +24,14 @@ def article_to_dict(article):
 
 
 def fetch_metadata_by_id(article_id):
+    """Fetches metadata from ArXiv API based on the provided article ID."""
     url_id = ARXIV_API_FEED_URL + "?id_list=" + article_id
     data = requests.get(url_id)
     my_feed = feedparser.parse(data.text)
     return my_feed
 
 
-def get_arxiv_articles(query="all", start=0, max_results=10, start_date=None):
+def get_arxiv_articles(query="all", start=0, max_results=10, start_date=None, end_date=None):
     """Get ArXiv articles based on the search query and start date."""
     if not query or query.strip() == "":
         query = "all"
@@ -44,6 +46,8 @@ def get_arxiv_articles(query="all", start=0, max_results=10, start_date=None):
 
     if start_date:
         params["start_date"] = start_date
+    if end_date:
+        params["end_date"] = end_date
 
     response = requests.get(ARXIV_API_FEED_URL, params=params)
     feed = feedparser.parse(response.text)
@@ -83,6 +87,7 @@ def get_arxiv_articles(query="all", start=0, max_results=10, start_date=None):
 
 
 def fetch_summary_by_id(article_id):
+    """Fetches the summary of the specified article from ArXiv API."""
     url_id = ARXIV_API_FEED_URL + "?id_list=" + str(article_id)
     data = requests.get(url_id)
     my_feed = feedparser.parse(data.text)
@@ -94,6 +99,7 @@ def fetch_summary_by_id(article_id):
 
 
 def populate_single_article(article_id):
+    """Populates the database with a single article based on the provided article ID."""
     existing_article = db.session.get(Article, article_id)
 
     if existing_article is None:
@@ -132,10 +138,20 @@ def populate_single_article(article_id):
         return jsonify({"error": "Article already exists in the database"}), 400
 
 
-def populate_articles_by_query(query, max_results):
-    # Implement logic to populate articles based on query and max_results
+def populate_articles_by_query(query, max_results, start_date=None, end_date=None):
+    """
+    Populates the database with articles based on the provided query, max_results, start_date, and end_date.
 
-    articles = get_arxiv_articles(query=query, max_results=max_results)
+    Args:
+        query (str): The search query.
+        max_results (int): The maximum number of results to fetch.
+        start_date (str): The start date for filtering articles (format: "YYYY-MM-DD").
+        end_date (str): The end date for filtering articles (format: "YYYY-MM-DD").
+
+    Returns:
+        dict: A JSON response indicating the status of the operation.
+    """
+    articles = get_arxiv_articles(query=query, max_results=max_results, start_date=start_date, end_date=end_date)
 
     for entry in articles:
         article_id = entry["id"]

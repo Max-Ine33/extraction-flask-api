@@ -100,7 +100,6 @@ To ensure a clean and isolated environment for running the Fil Rouge Extraction 
 | Get all the articles                  | `curl -X GET 'http://localhost:8080/articles'` |
 | Display more pages                    | `curl -X GET 'http://localhost:8080/articles?page=6'` |
 | Get an article by id                  | `curl -X GET 'http://localhost:8080/articles/2401.10216'` |
-| Sort by date                          |   |
 | Display articles published after 2024-01-18 | `curl -X GET 'http://localhost:8080/articles?start_date=2024-01-18'` |
 | Display articles published before 2024-01-18 | `curl -X GET 'http://localhost:8080/articles?end_date=2024-01-18'` |
 | Display articles published between 2024-01-17 and 2024-01-18 | `curl -X GET 'http://localhost:8080/articles?start_date=2024-01-17&end_date=2024-01-18'` |
@@ -121,7 +120,7 @@ To ensure a clean and isolated environment for running the Fil Rouge Extraction 
 
 | Command                                |
 |----------------------------------------|
-| `curl -X POST 'http://localhost:8080/empty_database' -H "Content-Type: application/json" -d '{}'` |
+| `curl -X POST 'http://localhost:8080/empty_database' -d 'confirmation=yes'` |
 
   
 

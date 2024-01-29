@@ -102,7 +102,9 @@ with app.app_context():
         )
 
         # Convert articles to dictionaries
-        articles_dict = {"articles": [article_to_dict(article) for article in articles.items]}
+        articles_dict = {
+            "articles": [article_to_dict(article) for article in articles.items]
+        }
 
         # Use json.dumps to serialize the data to a JSON-formatted string with indentation
         json_data = json.dumps(articles_dict, indent=2)
@@ -125,7 +127,9 @@ with app.app_context():
             json_data = json.dumps(article_dict, indent=2)
 
             # Create a Flask Response with the formatted JSON
-            response = Response(response=json_data, status=200, mimetype="application/json")
+            response = Response(
+                response=json_data, status=200, mimetype="application/json"
+            )
 
             return response
         else:
@@ -164,7 +168,9 @@ with app.app_context():
                 json_data = json.dumps(new_article_dict, indent=2)
 
                 # Create a Flask Response with the formatted JSON
-                response = Response(response=json_data, status=200, mimetype="application/json")
+                response = Response(
+                    response=json_data, status=200, mimetype="application/json"
+                )
 
                 return response
             else:

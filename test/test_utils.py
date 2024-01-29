@@ -159,7 +159,6 @@ class UtilsTestCase(unittest.TestCase):
         # Modify the assertion to check for a substring
         self.assertEqual(expected_summary, result)
 
-
     def test_populate_single_article(self):
         # Test for populate_single_article
         article_id = "new_test_article"
@@ -177,7 +176,9 @@ class UtilsTestCase(unittest.TestCase):
         mock_response.text = template_response_content
 
         # Set up the mock to return the mocked response when the arXiv API is called
-        with app.app_context(), patch("src.utils.requests.get", return_value=mock_response):
+        with app.app_context(), patch(
+            "src.utils.requests.get", return_value=mock_response
+        ):
             # Call the function that populates a single article
             article_id = "2401.13999"
             result = populate_single_article(article_id)
@@ -193,10 +194,12 @@ class UtilsTestCase(unittest.TestCase):
             response_message = flask_response.get_json().get("message", "")
 
             # Check if the message indicates success
-            self.assertIn("Article added to the database successfully", response_message)
+            self.assertIn(
+                "Article added to the database successfully", response_message
+            )
 
             # Check if the article is now in the database
-            response = self.app.get(f'/articles/{article_id}')
+            response = self.app.get(f"/articles/{article_id}")
             self.assertEqual(response.status_code, 200)  # Article in the database
 
             # Try to populate the same article again
@@ -204,7 +207,6 @@ class UtilsTestCase(unittest.TestCase):
 
             # Check if the response indicates that the article already exists
             self.assertEqual(result_duplicate[1], 400)
-
 
     def test_populate_articles_by_query(self):
         # Test for populate_articles_by_query
@@ -218,8 +220,6 @@ class UtilsTestCase(unittest.TestCase):
             # Check if the response indicates success
             result = response.get_json()
             self.assertIn("message", result)
-
-
 
 
 if __name__ == "__main__":

@@ -163,7 +163,3 @@ def populate_articles_by_query(query, max_results):
     db.session.commit()
 
     return jsonify({"message": "Articles added to the database successfully"})
-
-
-
-

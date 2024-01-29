@@ -31,8 +31,8 @@ class AppTestCase(unittest.TestCase):
         response = self.app.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"<h1>Welcome to this API", response.data)
-        self.assertIn(b"<a href=\"/articles\">View Articles</a>", response.data)
-        self.assertIn(b"<a href=\"/about\">About this API</a>", response.data)
+        self.assertIn(b'<a href="/articles">View Articles</a>', response.data)
+        self.assertIn(b'<a href="/about">About this API</a>', response.data)
 
     def test_about_page(self):
         response = self.app.get("/about")

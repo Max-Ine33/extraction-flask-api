@@ -84,7 +84,7 @@ Using a keyword:
   
 Using an article id:
 ```bash
-  curl -X POST -H "Content-Type: application/json" -d '{"article_id": "123456"}' http://localhost:8080/populate_articles
+  curl -X POST -H "Content-Type: application/json" -d '{"article_id": "2401.10216"}' http://localhost:8080/populate_articles
 ```
 
 ### Displaying the articles in the database
@@ -92,15 +92,28 @@ Get all the articles:
 ```bash
   curl -X GET http://localhost:8080/articles
 ```  
-  
+  > 10 articles maximum are displayed on each page  
+Display more pages:  
+```bash
+  curl -X GET http://localhost:8080/articles?page=6
+```  
 Get an article by id (adds it to the database if not already in it):  
 ```bash
   curl -X GET http://localhost:8080/articles/2401.10216
 ```  
   
 Sort by date:  
+  > Display articles published after 2024-01-18  
 ```bash
-curl -X GET http://localhost:8080/articles?start_date=2024-01-18&end_date=2024-01-18
+curl -X GET http://localhost:8080/articles?start_date=2024-01-18
+```  
+  > Display articles published before 2024-01-18  
+```bash
+curl -X GET http://localhost:8080/articles?end_date=2024-01-18
+```  
+  > Display articles published between 2024-01-17 and 2024-01-18  
+```bash
+curl -X GET http://localhost:8080/articles?start_date=2024-01-17&end_date=2024-01-18
 ```
 
 ### Get an article summary
@@ -118,10 +131,13 @@ To run tests, run the following command:
 
 ```bash
   python -m unittest discover -s test -p 'test_*.py'
-
 ```
-
-
+  
+## Additional Info
+To change the port where the API is running (8080 by default), you can update this line in the gunicorn_config.py file:  
+```bash
+bind = "0.0.0.0:8080"
+```
 ## Authors
 
 - [@maxine.gravier](https://gitlab-student.centralesupelec.fr/maxine.gravier)

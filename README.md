@@ -73,66 +73,42 @@ To ensure a clean and isolated environment for running the Fil Rouge Extraction 
 
 ### Populating the database
 
-- Populate with the most recent 1000 articles:  
-```bash
-  curl -X GET http://localhost:8080/auto_populate
-```
-  
-- Using a keyword:  
-```bash
-  curl -X POST -H "Content-Type: application/json" -d '{"query": "physics", "max_results": 5}' http://localhost:8080/populate_articles
-```  
-  
-- Using an article id:  
-```bash
-  curl -X POST -H "Content-Type: application/json" -d '{"article_id": "2401.10216"}' http://localhost:8080/populate_articles
-```
-  
+| Description                              | Command |
+|------------------------------------------|---------|
+| Populate with the most recent 1000 articles | `curl -X GET http://localhost:8080/auto_populate` |
+| Using a keyword                           | `curl -X POST -H "Content-Type: application/json" -d '{"query": "physics", "max_results": 5}' http://localhost:8080/populate_articles` |
+| Using an article id                        | `curl -X POST -H "Content-Type: application/json" -d '{"article_id": "2401.10216"}' http://localhost:8080/populate_articles` |
 
 ### Displaying the articles in the database
-- Get all the articles:  
-```bash
-  curl -X GET http://localhost:8080/articles
-```  
-_10 articles maximum are displayed on each page_
 
-- Display more pages:  
-```bash
-  curl -X GET http://localhost:8080/articles?page=6
-```  
-  
-- Get an article by id (adds it to the database if not already in it):  
-```bash
-  curl -X GET http://localhost:8080/articles/2401.10216
-```  
-  
-- Sort by date:
-  * Display articles published after 2024-01-18  
-```bash
-curl -X GET http://localhost:8080/articles?start_date=2024-01-18
-```  
-  
-  * Display articles published before 2024-01-18  
-```bash
-curl -X GET http://localhost:8080/articles?end_date=2024-01-18
-```  
-  
-  * Display articles published between 2024-01-17 and 2024-01-18  
-```bash
-curl -X GET http://localhost:8080/articles?start_date=2024-01-17&end_date=2024-01-18
-```
-  
+| Description                          | Command |
+|--------------------------------------|---------|
+| Get all the articles                  | `curl -X GET http://localhost:8080/articles` |
+| Display more pages                    | `curl -X GET http://localhost:8080/articles?page=6` |
+| Get an article by id                  | `curl -X GET http://localhost:8080/articles/2401.10216` |
+| Sort by date                          |   |
+| Display articles published after 2024-01-18 | `curl -X GET http://localhost:8080/articles?start_date=2024-01-18` |
+| Display articles published before 2024-01-18 | `curl -X GET http://localhost:8080/articles?end_date=2024-01-18` |
+| Display articles published between 2024-01-17 and 2024-01-18 | `curl -X GET http://localhost:8080/articles?start_date=2024-01-17&end_date=2024-01-18` |
 
 ### Get an article summary
-```bash
-  curl -X GET http://localhost:8080/text/2401.10216
-```
-  
+
+| Command                                |
+|----------------------------------------|
+| `curl -X GET http://localhost:8080/text/2401.10216` |
+
+### Delete an article from the database
+
+| Command                                |
+|----------------------------------------|
+| `curl -X POST http://localhost:8080/remove/2401.13999` |
 
 ### Delete all entries in the database
-```bash
-curl -X POST http://localhost:8080/empty_database -H "Content-Type: application/json" -d '{}'
-```
+
+| Command                                |
+|----------------------------------------|
+| `curl -X POST http://localhost:8080/empty_database -H "Content-Type: application/json" -d '{}'` |
+
   
 
 

@@ -82,7 +82,7 @@ You can use the [basic UI](#using-the-ui) or make curl requests (some [examples]
 | GET         | /articles                       | Retrieve a list of articles based on filters      | `query` (optional), `page` (optional), `per_page` (optional), `start_date` (optional), `end_date` (optional) | JSON                                            | Pagination supported.                       |
 | GET/POST         | /articles/{article_id}          | Describe the requested article, all metadata      | JSON: `{ "article_id": "123" }`                                    | JSON                                            | If article not in the database, fetch from arXiv API. |
 | GET         | /text/{article_id}               | Retrieve the summary of the specified article     | `article_id` (path parameter)                                       | Plain Text                                      |                                            |
-| POST        | /populate_articles               | Populate the database with articles               | JSON: `{ "article_id": "123", "query": "all", "max_results": 10 }` | JSON                                            |                                            |
+| POST        | /populate_articles               | Populate the database with articles               | `query` (optional), `page` (optional), `per_page` (optional), `start_date` (optional), `end_date` (optional), JSON: `{"query": "all", "max_results": 10 }` | JSON                                            |                                            |
 | GET         | /auto_populate                   | Populate the database with default parameters     | N/A                                                                   | JSON                                            |                                            |
 | GET/POST    | /empty_database                  | Render confirmation page and handle empty database | Form data: `confirmation` (string, should be "yes" for deletion)     | JSON                                            |                                            |
 | GET/POST    | /remove/{article_id}             | Delete the specified article from the database    | `article_id` (path parameter)                                       | JSON                                            |                                            |
@@ -101,7 +101,7 @@ You can use the [basic UI](#using-the-ui) or make curl requests (some [examples]
 | Description                          | Command |
 |--------------------------------------|---------|
 | Get all the articles                  | `curl -X GET 'http://localhost:8080/articles'` |
-| Display more pages                    | `curl -X GET 'http://localhost:8080/articles?page=6'` |
+| Display more pages/articles per page                    | `curl -X GET 'http://localhost:8080/articles?page=6&per_page=15'` |
 | Get an article by id                  | `curl -X GET 'http://localhost:8080/articles/2401.10216'` |
 | Display articles published after 2024-01-18 | `curl -X GET 'http://localhost:8080/articles?start_date=2024-01-18'` |
 | Display articles published before 2024-01-18 | `curl -X GET 'http://localhost:8080/articles?end_date=2024-01-18'` |
